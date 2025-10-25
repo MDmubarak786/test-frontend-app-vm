@@ -1,48 +1,65 @@
-import { useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import Home from './pages/Home'
 import About from './pages/About'
 import MyName from './pages/MyName'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <nav style={{ marginBottom: '20px' }}>
-        <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
-        <Link to="/about" style={{ marginRight: '10px' }}>About</Link>
-        <Link to="/my-name">My Name</Link>
+      <nav style={{
+        marginBottom: '20px',
+        padding: '15px',
+        background: 'rgba(255, 255, 255, 0.05)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '8px',
+        display: 'flex',
+        gap: '15px',
+        justifyContent: 'center'
+      }}>
+        <Link
+          to="/"
+          style={{
+            textDecoration: 'none',
+            color: '#646cff',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            transition: 'background 0.3s',
+            fontWeight: '500'
+          }}
+        >
+          🏠 Home
+        </Link>
+        <Link
+          to="/about"
+          style={{
+            textDecoration: 'none',
+            color: '#646cff',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            transition: 'background 0.3s',
+            fontWeight: '500'
+          }}
+        >
+          ℹ️ About
+        </Link>
+        <Link
+          to="/my-name"
+          style={{
+            textDecoration: 'none',
+            color: '#646cff',
+            padding: '8px 16px',
+            borderRadius: '6px',
+            transition: 'background 0.3s',
+            fontWeight: '500'
+          }}
+        >
+          👤 My Name
+        </Link>
       </nav>
 
       <Routes>
-        <Route path="/" element={
-          <>
-            <div>
-              <a href="https://vite.dev" target="_blank">
-                <img src={viteLogo} className="logo" alt="Vite logo" />
-              </a>
-              <a href="https://react.dev" target="_blank">
-                <img src={reactLogo} className="logo react" alt="React logo" />
-              </a>
-            </div>
-            <h1>Vite + React</h1>
-            <h1>Mubarak</h1>
-            <div className="card">
-              <button onClick={() => setCount((count) => count + 1)}>
-                count is {count}
-              </button>
-              <p>
-                Edit <code>src/App.tsx</code> and save to test HMR
-              </p>
-            </div>
-            <p className="read-the-docs">
-              Click on the Vite and React logos to learn more
-            </p>
-          </>
-        } />
+        <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/my-name" element={<MyName />} />
       </Routes>
