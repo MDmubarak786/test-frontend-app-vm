@@ -19,14 +19,13 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
+      # 1️⃣ Build with env var injected
       - name: Build
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
-        run: npm run build
+        run: npm ci && npm run build
 
+      # 2️⃣ Setup SSH for EC2 access
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -34,12 +33,21 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+      # 3️⃣ Copy built files to EC2
       - name: Deploy with rsync
         run: |
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
             dist/ ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/var/www/frontend/
 
+      # 4️⃣ (Optional) Create an .env file in server
+      - name: Create .env file on EC2
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} \
+            "echo 'VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}' > /var/www/frontend/.env"
+
+      # 5️⃣ Reload Nginx after deploy
       - name: Restart Nginx
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
