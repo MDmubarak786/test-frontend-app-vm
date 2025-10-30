@@ -28,10 +28,23 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
             ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} "
-              cd ~/frontend &&
-              docker stop react-frontend || true &&
-              docker rm react-frontend || true &&
-              docker build -t react-frontend \
-                --build-arg VITE_API_BASE_URL='${{ secrets.VITE_API_BASE_URL }}' . &&
-              docker run -d --name react-frontend -p 80:80 react-frontend
+              set -e
+              cd ~/frontend
+
+              echo '🔹 Cleaning up old container...'
+              sudo docker stop react-frontend || true
+              sudo docker rm react-frontend || true
+
+              echo '🔹 Building new image...'
+              sudo docker build -t react-frontend \
+                --build-arg VITE_API_BASE_URL='${{ secrets.VITE_API_BASE_URL }}' .
+
+              echo '🔹 Running new container...'
+              sudo docker run -d --restart=always \
+                --name react-frontend \
+                -p 80:80 \
+                react-frontend
+
+              echo '✅ Deployment done. Current containers:'
+              sudo docker ps
             "
