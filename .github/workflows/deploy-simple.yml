@@ -42,7 +42,8 @@ jobs:
               echo '🔹 Running new container...'
               sudo docker run -d --restart=always \
                 --name react-frontend \
-                -p 80:80 \
+                -v /etc/letsencrypt:/etc/letsencrypt:ro \
+                -p 443:443 -p 80:80 \
                 react-frontend
 
               echo '✅ Deployment done. Current containers:'
