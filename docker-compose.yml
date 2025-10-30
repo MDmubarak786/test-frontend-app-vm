@@ -4,5 +4,8 @@ services:
     build: .
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt/live/test-dev.ingeniousclan.com:/etc/letsencrypt/live/test-dev.ingeniousclan.com:ro  
     container_name: react-frontend
     restart: unless-stopped
